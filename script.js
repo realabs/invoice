@@ -1,4 +1,3 @@
-const STORAGE_KEY = "invoice-builder-state-v1";
 const PDF_LIBRARY_SOURCES = [
   "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js",
   "https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js",

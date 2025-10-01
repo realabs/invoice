@@ -300,6 +300,13 @@ async function handleDownloadPdf() {
   const element = document.getElementById("invoicePreview");
   const filename = `${state.invoiceNumber || "invoice"}.pdf`;
 
+  if (typeof window.html2pdf !== "function") {
+    alert(
+      "The PDF export library failed to load. Please check your internet connection and reload the page."
+    );
+    return;
+  }
+
   const options = {
     margin: [10, 10, 10, 10],
     filename,
@@ -310,8 +317,19 @@ async function handleDownloadPdf() {
 
   try {
     document.body.classList.add("is-exporting");
-    await html2pdf().set(options).from(element).save();
+    if (trigger) {
+      trigger.disabled = true;
+      trigger.setAttribute("aria-busy", "true");
+    }
+    await window.html2pdf().set(options).from(element).save();
+  } catch (error) {
+    console.error("Failed to export invoice PDF", error);
+    alert("Something went wrong while creating the PDF. Please try again.");
   } finally {
     document.body.classList.remove("is-exporting");
+    if (trigger) {
+      trigger.disabled = false;
+      trigger.removeAttribute("aria-busy");
+    }
   }
 }

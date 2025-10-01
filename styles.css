@@ -95,6 +95,12 @@ body.is-exporting button {
     box-shadow 0.2s ease;
 }
 
+.button[disabled] {
+  opacity: 0.65;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
 .button--primary {
   color: #fff;
   background: var(--color-primary);

@@ -18,6 +18,7 @@ const defaultState = {
   issueDate: "2023-09-01",
   dueDate: "2023-09-15",
   currency: "USD",
+  paymentTerms: "Net 14",
   balanceDue: "4000",
   notes:
     "Thank you for your business. Please submit payment by the due date listed above. If you have any questions, contact billing@acme.co.",

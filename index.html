@@ -85,6 +85,10 @@
                   <input id="currency" name="currency" maxlength="5" class="field__input" />
                 </div>
                 <div>
+                  <label for="paymentTerms" class="field__label">Payment terms</label>
+                  <input id="paymentTerms" name="paymentTerms" class="field__input" />
+                </div>
+                <div>
                   <label for="balanceDue" class="field__label">Balance due</label>
                   <input id="balanceDue" name="balanceDue" type="number" step="0.01" class="field__input" />
                 </div>
@@ -188,7 +192,12 @@
         </section>
       </main>
     </div>
-
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+      integrity="sha512-YcsIPiUZK9Q9ZrF+lr3eF2/6t6WdhI5UADPYB90imVjCwXTlzAIXazhbugzuDUFcPRwvx6pRP70dNw7T7K8uQg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
     <script src="./script.js" defer></script>
   </body>
 </html>

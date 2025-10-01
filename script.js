@@ -1,4 +1,9 @@
-const STORAGE_KEY = "invoice-builder-state-v1";
+const PDF_LIBRARY_SOURCES = [
+  "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js",
+  "https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js",
+];
+
+let pdfLibraryPromise = null;
 
 const defaultState = {
   sellerName: "Acme Consulting Group",
@@ -39,6 +44,10 @@ renderPreview();
 
 bindFormFields();
 
+ensurePdfLibrary().catch((error) => {
+  console.warn("Unable to pre-load the PDF export library", error);
+});
+
 function loadState() {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -61,6 +70,66 @@ function cloneValue(value) {
     return window.structuredClone(value);
   }
   return JSON.parse(JSON.stringify(value));
+}
+
+function ensurePdfLibrary() {
+  if (typeof window === "undefined") {
+    return Promise.reject(
+      new Error("PDF export is not available in this environment.")
+    );
+  }
+
+  if (typeof window.html2pdf === "function") {
+    return Promise.resolve(window.html2pdf);
+  }
+
+  if (!pdfLibraryPromise) {
+    pdfLibraryPromise = new Promise((resolve, reject) => {
+      let attemptIndex = 0;
+      const target =
+        document.head || document.getElementsByTagName("head")[0] || document.body;
+
+      const loadNext = () => {
+        if (typeof window.html2pdf === "function") {
+          resolve(window.html2pdf);
+          return;
+        }
+
+        if (attemptIndex >= PDF_LIBRARY_SOURCES.length) {
+          reject(new Error("Unable to load the PDF export library."));
+          return;
+        }
+
+        const url = PDF_LIBRARY_SOURCES[attemptIndex++];
+        const script = document.createElement("script");
+        script.src = url;
+        script.async = true;
+        script.crossOrigin = "anonymous";
+        script.referrerPolicy = "no-referrer";
+        script.onload = () => {
+          if (typeof window.html2pdf === "function") {
+            resolve(window.html2pdf);
+          } else {
+            script.remove();
+            loadNext();
+          }
+        };
+        script.onerror = () => {
+          script.remove();
+          loadNext();
+        };
+
+        target.appendChild(script);
+      };
+
+      loadNext();
+    }).catch((error) => {
+      pdfLibraryPromise = null;
+      throw error;
+    });
+  }
+
+  return pdfLibraryPromise;
 }
 
 function populateForm() {
@@ -298,15 +367,8 @@ function escapeHtml(value) {
 
 async function handleDownloadPdf() {
   const element = document.getElementById("invoicePreview");
+  const trigger = document.getElementById("downloadPdf");
   const filename = `${state.invoiceNumber || "invoice"}.pdf`;
-
-  if (typeof window.html2pdf !== "function") {
-    alert(
-      "The PDF export library failed to load. Please check your internet connection and reload the page."
-    );
-    return;
-  }
-
   const options = {
     margin: [10, 10, 10, 10],
     filename,
@@ -321,10 +383,22 @@ async function handleDownloadPdf() {
       trigger.disabled = true;
       trigger.setAttribute("aria-busy", "true");
     }
+    await ensurePdfLibrary();
+
+    if (typeof window.html2pdf !== "function") {
+      throw new Error("PDF export library unavailable after loading attempts.");
+    }
+
     await window.html2pdf().set(options).from(element).save();
   } catch (error) {
     console.error("Failed to export invoice PDF", error);
-    alert("Something went wrong while creating the PDF. Please try again.");
+    if (typeof window.html2pdf !== "function") {
+      alert(
+        "The PDF export library could not be loaded. Please check your internet connection and try again."
+      );
+    } else {
+      alert("Something went wrong while creating the PDF. Please try again.");
+    }
   } finally {
     document.body.classList.remove("is-exporting");
     if (trigger) {

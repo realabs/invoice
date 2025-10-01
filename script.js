@@ -298,7 +298,6 @@ function escapeHtml(value) {
 
 async function handleDownloadPdf() {
   const element = document.getElementById("invoicePreview");
-  const trigger = document.getElementById("downloadPdf");
   const filename = `${state.invoiceNumber || "invoice"}.pdf`;
 
   if (typeof window.html2pdf !== "function") {

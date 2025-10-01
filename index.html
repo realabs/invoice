@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invoice Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="page__header">
+        <h1 class="page__title">Invoice Generator</h1>
+        <div class="page__actions">
+          <button
+            id="downloadPdf"
+            type="button"
+            class="button button--primary"
+          >
+            Export PDF
+          </button>
+          <button id="resetState" class="button button--secondary">
+            Reset data
+          </button>
+        </div>
+      </header>
+      <main class="page__content">
+        <section class="panel">
+          <h2 class="panel__title">Invoice data</h2>
+          <form id="invoiceForm" class="form" autocomplete="off">
+            <fieldset class="fieldset">
+              <legend class="fieldset__title">Seller</legend>
+              <div class="field">
+                <label for="sellerName" class="field__label">Name / Company</label>
+                <input id="sellerName" name="sellerName" class="field__input" />
+              </div>
+              <div class="field">
+                <label for="sellerAddress" class="field__label">Address</label>
+                <textarea id="sellerAddress" name="sellerAddress" class="field__input field__input--textarea"></textarea>
+              </div>
+              <div class="field">
+                <label for="sellerPhone" class="field__label">Phone</label>
+                <input id="sellerPhone" name="sellerPhone" class="field__input" />
+              </div>
+              <div class="field">
+                <label for="sellerEmail" class="field__label">Email</label>
+                <input id="sellerEmail" name="sellerEmail" type="email" class="field__input" />
+              </div>
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend class="fieldset__title">Client</legend>
+              <div class="field">
+                <label for="clientName" class="field__label">Name / Company</label>
+                <input id="clientName" name="clientName" class="field__input" />
+              </div>
+              <div class="field">
+                <label for="clientContact" class="field__label">Contact details</label>
+                <textarea id="clientContact" name="clientContact" class="field__input field__input--textarea"></textarea>
+              </div>
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend class="fieldset__title">Invoice information</legend>
+              <div class="field field--grid">
+                <div>
+                  <label for="invoiceNumber" class="field__label">Number</label>
+                  <input id="invoiceNumber" name="invoiceNumber" class="field__input" />
+                </div>
+                <div>
+                  <label for="issueDate" class="field__label">Issue date</label>
+                  <input id="issueDate" name="issueDate" type="date" class="field__input" />
+                </div>
+                <div>
+                  <label for="dueDate" class="field__label">Due date</label>
+                  <input id="dueDate" name="dueDate" type="date" class="field__input" />
+                </div>
+                <div>
+                  <label for="currency" class="field__label">Currency</label>
+                  <input id="currency" name="currency" maxlength="5" class="field__input" />
+                </div>
+                <div>
+                  <label for="balanceDue" class="field__label">Balance due</label>
+                  <input id="balanceDue" name="balanceDue" type="number" step="0.01" class="field__input" />
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend class="fieldset__title">Line items</legend>
+              <div id="itemsContainer" class="items"></div>
+              <button type="button" id="addItem" class="button button--ghost">Add line item</button>
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend class="fieldset__title">Notes</legend>
+              <div class="field">
+                <label for="notes" class="field__label">Additional notes</label>
+                <textarea id="notes" name="notes" class="field__input field__input--textarea"></textarea>
+              </div>
+            </fieldset>
+          </form>
+        </section>
+
+        <section class="panel panel--preview">
+          <h2 class="panel__title">Preview</h2>
+          <div id="invoicePreview" class="invoice">
+            <header class="invoice__header">
+              <div class="invoice__seller">
+                <div class="invoice__seller-name" data-field="sellerName"></div>
+                <div class="invoice__seller-address" data-field="sellerAddress"></div>
+                <div class="invoice__seller-contact">
+                  <div data-field="sellerPhone"></div>
+                  <div data-field="sellerEmail"></div>
+                </div>
+              </div>
+              <div class="invoice__meta">
+                <div class="invoice__title">Invoice</div>
+                <div class="invoice__number">
+                  <span class="invoice__label">Number</span>
+                  <span data-field="invoiceNumber"></span>
+                </div>
+                <div class="invoice__balance">
+                  <span class="invoice__label">Balance due</span>
+                  <span data-field="balanceDue"></span>
+                </div>
+              </div>
+            </header>
+
+            <div class="invoice__info">
+              <div class="invoice__info-row">
+                <div class="invoice__label">Issue date</div>
+                <div data-field="issueDate"></div>
+              </div>
+              <div class="invoice__info-row">
+                <div class="invoice__label">Due date</div>
+                <div data-field="dueDate"></div>
+              </div>
+              <div class="invoice__info-row">
+                <div class="invoice__label">Currency</div>
+                <div data-field="currency"></div>
+              </div>
+            </div>
+
+            <div class="invoice__billto">
+              <div class="invoice__label">Bill to</div>
+              <div class="invoice__billto-name" data-field="clientName"></div>
+              <div class="invoice__billto-contact" data-field="clientContact"></div>
+            </div>
+
+            <table class="invoice__table">
+              <thead>
+                <tr>
+                  <th>Description</th>
+                  <th>Type</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody data-items></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4">Subtotal</td>
+                  <td data-summary="subtotal"></td>
+                </tr>
+                <tr>
+                  <td colspan="4">Tax</td>
+                  <td data-summary="tax"></td>
+                </tr>
+                <tr>
+                  <td colspan="4">Total due</td>
+                  <td data-summary="total"></td>
+                </tr>
+              </tfoot>
+            </table>
+
+            <div class="invoice__notes">
+              <div class="invoice__label">Notes</div>
+              <div data-field="notes"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./script.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,427 @@
+:root {
+  color-scheme: light;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+  --color-bg: #f5f6fb;
+  --color-panel: #ffffff;
+  --color-border: #dce0eb;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-text: #1f2937;
+  --color-text-secondary: #6b7280;
+  --shadow-sm: 0 6px 24px rgba(15, 23, 42, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+body.is-exporting {
+  cursor: progress;
+}
+
+body.is-exporting button {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page__header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.page__title {
+  font-size: 32px;
+  margin: 0;
+}
+
+.page__actions {
+  display: flex;
+  gap: 12px;
+}
+
+.page__content {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  align-items: start;
+}
+
+.panel {
+  background: var(--color-panel);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.panel__title {
+  font-size: 20px;
+  margin: 0;
+  font-weight: 600;
+}
+
+.button {
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.button[disabled] {
+  opacity: 0.65;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.button--primary {
+  color: #fff;
+  background: var(--color-primary);
+}
+
+.button--primary:hover {
+  background: var(--color-primary-hover);
+}
+
+.button--secondary {
+  color: var(--color-primary);
+  background: rgba(37, 99, 235, 0.1);
+  border-color: rgba(37, 99, 235, 0.3);
+}
+
+.button--ghost {
+  background: transparent;
+  color: var(--color-primary);
+  border-color: var(--color-border);
+}
+
+.button--ghost:hover {
+  border-color: var(--color-primary);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.fieldset__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 4px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field__label {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.field__input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  font: inherit;
+  color: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.field__input:focus {
+  border-color: var(--color-primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.field__input--textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+
+.field--grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.item-row {
+  display: grid;
+  gap: 12px;
+  grid-template-columns:
+    minmax(220px, 2.2fr)
+    minmax(150px, 1.2fr)
+    repeat(3, minmax(110px, 1fr))
+    auto;
+  align-items: end;
+}
+
+.item-row__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.item-row__remove {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.item-row__remove:hover {
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.panel--preview {
+  position: sticky;
+  top: 24px;
+}
+
+.invoice {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px 28px;
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.invoice__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.invoice__seller-name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.invoice__seller-address,
+.invoice__seller-contact div {
+  color: var(--color-text-secondary);
+  white-space: pre-line;
+}
+
+.invoice__meta {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.invoice__title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.invoice__label {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.invoice__balance span:last-child,
+.invoice__number span:last-child {
+  font-size: 16px;
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.invoice__info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px 24px;
+}
+
+.invoice__info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.invoice__info-row [data-field] {
+  font-weight: 600;
+  color: var(--color-text);
+  text-align: right;
+  word-break: break-word;
+}
+
+.invoice__billto {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.invoice__billto-name {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.invoice__billto-contact {
+  color: var(--color-text-secondary);
+  white-space: pre-line;
+}
+
+.invoice__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  table-layout: fixed;
+}
+
+.invoice__table th,
+.invoice__table td {
+  border-bottom: 1px solid var(--color-border);
+  padding: 10px 6px;
+  text-align: left;
+  vertical-align: top;
+  word-break: break-word;
+}
+
+.invoice__table th {
+  background: rgba(15, 23, 42, 0.04);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+}
+
+.invoice__table td:last-child,
+.invoice__table th:last-child {
+  text-align: right;
+}
+
+.invoice__table td:nth-child(1),
+.invoice__table th:nth-child(1) {
+  width: 36%;
+}
+
+.invoice__table td:nth-child(2),
+.invoice__table th:nth-child(2) {
+  width: 18%;
+}
+
+.invoice__table td:nth-child(3),
+.invoice__table th:nth-child(3) {
+  width: 12%;
+}
+
+.invoice__table td:nth-child(4),
+.invoice__table th:nth-child(4) {
+  width: 17%;
+}
+
+.invoice__table td:nth-child(5),
+.invoice__table th:nth-child(5) {
+  width: 17%;
+}
+
+.invoice__table tfoot td {
+  font-weight: 600;
+}
+
+.invoice__notes {
+  border-top: 1px solid var(--color-border);
+  padding-top: 14px;
+  color: var(--color-text-secondary);
+  white-space: pre-line;
+  font-size: 13px;
+}
+
+@media (max-width: 900px) {
+  .panel--preview {
+    position: static;
+  }
+
+  .invoice__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .invoice__meta {
+    text-align: left;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 1200px) {
+  .item-row {
+    grid-template-columns:
+      minmax(220px, 2.2fr)
+      minmax(150px, 1.2fr)
+      repeat(2, minmax(120px, 1fr))
+      auto;
+  }
+
+  .item-row__field:nth-last-child(2) {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 720px) {
+  .item-row {
+    grid-template-columns: minmax(200px, 2fr) minmax(150px, 1fr) auto;
+  }
+
+  .item-row__field:nth-child(n + 3) {
+    grid-column: span 2;
+  }
+}

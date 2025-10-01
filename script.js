@@ -1,3 +1,4 @@
+const STORAGE_KEY = "invoice-builder-state-v1";
 const PDF_LIBRARY_SOURCES = [
   "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js",
   "https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js",
@@ -53,7 +54,9 @@ function loadState() {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
-      return { ...cloneValue(defaultState), ...parsed };
+      const next = { ...cloneValue(defaultState), ...parsed };
+      delete next.paymentTerms;
+      return next;
     }
   } catch (error) {
     console.warn("Unable to load saved invoice data", error);
@@ -145,7 +148,7 @@ function populateForm() {
 function bindFormFields() {
   const fields = form.querySelectorAll("input, textarea");
   fields.forEach((field) => {
-    if (field.name === "") return;
+    if (field.name === "" || field.name === "paymentTerms") return;
     field.addEventListener("input", () => {
       if (field.name === "balanceDue") {
         state[field.name] = field.value.trim();
